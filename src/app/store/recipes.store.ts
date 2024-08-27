@@ -1,7 +1,8 @@
 import { Recipe } from '../core/models/recipe.model';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { RecipesService } from '../services/todos/todos.service';
+import { RecipesService } from '../services/recipes/recipes.service';
 import { inject } from '@angular/core';
+import { catchError, of, switchMap } from 'rxjs';
 
 export type RecipesFilter = 'all' | 'name' | 'favorites' | 'category';
 
@@ -21,10 +22,19 @@ export const RecipesStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods((store, recipesService = inject(RecipesService)) => ({
-    async loadAll() {
+    loadAll() {
       patchState(store, { loading: true });
-      const recipes = await recipesService.getRecipes();
-      patchState(store, { recipes, loading: false });
+      return recipesService.getRecipes().pipe(
+        switchMap((recipes: any) => {
+          patchState(store, { recipes, loading: false });
+          return of(recipes);
+        }),
+        catchError((error: any) => {
+          console.error('Error Fetching recipes:', error);
+          patchState(store, { loading: false });
+          return of([]);
+        })
+      );
     },
   }))
 );

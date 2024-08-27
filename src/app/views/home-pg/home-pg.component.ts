@@ -6,11 +6,18 @@ import { MatInputModule } from '@angular/material/input';
 import { RecipeCardComponent } from '../../shared/components/recipe-card/recipe-card.component';
 import { Unsubscriber } from '../../core/services/unsubscriber.service';
 import { takeUntil } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home-pg',
   standalone: true,
-  imports: [MatSelectModule, MatFormField, MatInputModule, RecipeCardComponent],
+  imports: [
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatFormField,
+    MatInputModule,
+    RecipeCardComponent,
+  ],
   templateUrl: './home-pg.component.html',
 })
 export class HomePgComponent extends Unsubscriber {

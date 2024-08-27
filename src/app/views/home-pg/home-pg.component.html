@@ -7,9 +7,12 @@
     }
   </mat-select>
 </mat-form-field>
-
-<div class="flex gap-6 p-6 flex-wrap justify-center margin-auto">
+@if(!store.loading()){
+<div class="flex gap-6 p-6 flex-wrap justify-center m-auto">
   @for(recipe of store.recipes();track recipe.title){
   <app-recipe-card [recipe]="recipe"></app-recipe-card>
   }
 </div>
+} @else{
+<mat-spinner class="m-auto" />
+}

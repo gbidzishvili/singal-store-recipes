@@ -1,1 +1,15 @@
-<p>home-pg works!</p>
+<h1 class="text-center">Recipes</h1>
+<mat-form-field appearance="outline">
+  <mat-label>Favorite food</mat-label>
+  <mat-select>
+    @for (filter of ["Name","Favorites","Category"]; track filter) {
+    <mat-option [value]="filter">{{ filter }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<div class="flex gap-6 p-6 flex-wrap justify-center margin-auto">
+  @for(recipe of store.recipes();track recipe.title){
+  <app-recipe-card [recipe]="recipe"></app-recipe-card>
+  }
+</div>

@@ -5,8 +5,5 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './edit-recipe-pg.component.html',
-  styleUrl: './edit-recipe-pg.component.css'
 })
-export class EditRecipePgComponent {
-
-}
+export class EditRecipePgComponent {}

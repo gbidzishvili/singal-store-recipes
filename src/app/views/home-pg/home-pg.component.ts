@@ -56,10 +56,11 @@ export class HomePgComponent extends Unsubscriber {
     this.router.navigate(['/edit'], { queryParams: { id: id } });
   }
   handleDeleteClick(id: string) {
-    this.store
-      .deleteRecipe(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((v) => console.log('delete recipe in home-pg', v));
+    if (confirm('Do you want to delete this Recipe'))
+      this.store
+        .deleteRecipe(id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((v) => console.log('delete recipe in home-pg', v));
   }
   goTo(endpoint: string) {
     this.router.navigate([endpoint]);

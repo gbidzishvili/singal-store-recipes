@@ -1,6 +1,6 @@
 <h1 class="text-center">Add new Recipe</h1>
 <form
-  [formGroup]="recipeForm"
+  [formGroup]="addRecipeForm"
   (submit)="onSubmit()"
   class="flex flex-col items-start gap-2 w-80 m-auto"
 >
@@ -40,11 +40,11 @@
       }
     </mat-select>
   </mat-form-field>
-  <input formControlName="image" type="file" />
-  <!-- <input formControlName="favorite" type="checkbox" /> -->
+  <input (change)="onFileUpload($event)" type="file" />
   <section class="example-section">
     <mat-checkbox formControlName="favorite" class="example-margin"
       >Check me!</mat-checkbox
     >
   </section>
+  <button mat-flat-button>submitForm</button>
 </form>

@@ -1,7 +1,9 @@
 <h1 class="text-center">Recipes</h1>
+<a [routerLink]="['/add']">Add</a>
+
 <mat-form-field appearance="outline">
   <mat-label>Favorite food</mat-label>
-  <mat-select>
+  <mat-select #filter (selectionChange)="onChangeValue($event)">
     @for (filter of ["Name","Favorites","Category"]; track filter) {
     <mat-option [value]="filter">{{ filter }}</mat-option>
     }
@@ -9,8 +11,12 @@
 </mat-form-field>
 @if(!store.loading()){
 <div class="flex gap-6 p-6 flex-wrap justify-center m-auto">
-  @for(recipe of store.recipes();track recipe.title){
-  <app-recipe-card [recipe]="recipe"></app-recipe-card>
+  @for(recipe of store.filterdRecipes();track recipe.title){
+  <app-recipe-card
+    (onEdit)="handleEditClick($event)"
+    (onDelete)="handleDeleteClick($event)"
+    [recipe]="recipe"
+  ></app-recipe-card>
   }
 </div>
 } @else{

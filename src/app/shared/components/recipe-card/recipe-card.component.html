@@ -1,7 +1,15 @@
 <mat-card class="flex items-center w-80" appearance="outlined">
+  <div class="flex justify-end gap-3 w-full p-2">
+    <mat-icon class="cursor-pointer" (click)="onEditIconClick(recipe().id)"
+      >edit</mat-icon
+    >
+    <mat-icon class="cursor-pointer" (click)="onDeleteIconClick(recipe().id)"
+      >delete</mat-icon
+    >
+  </div>
   <mat-card-header>
-    <mat-card-content> {{ recipe.title }} </mat-card-content>
+    <mat-card-content> {{ recipe().title }} </mat-card-content>
   </mat-card-header>
-  <img mat-card-xl-image [src]="recipe.image" />
-  <mat-card-content> {{ recipe.description }} </mat-card-content>
+  <img mat-card-xl-image [src]="recipe().image" />
+  <mat-card-content> {{ recipe().description }} </mat-card-content>
 </mat-card>

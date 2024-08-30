@@ -1,1 +1,51 @@
-<p>edit-recipe-pg works!</p>
+<p>edit Your Recipe works!</p>
+<h1 class="text-center">Add new Recipe</h1>
+<form
+  [formGroup]="editRecipeForm"
+  (submit)="onSubmit()"
+  class="flex flex-col items-start gap-2 w-80 m-auto"
+>
+  <!-- name -->
+  <mat-form-field class="w-full" appearance="outline">
+    <mat-label>name</mat-label>
+    <input formControlName="title" matInput placeholder="name" value="" />
+  </mat-form-field>
+  <!-- desc -->
+  <mat-form-field class="w-full" appearance="outline">
+    <mat-label>description</mat-label>
+    <textarea
+      formControlName="description"
+      matInput
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="5"
+      cdkAutosizeMaxRows="15"
+    ></textarea>
+  </mat-form-field>
+  <!-- ingredients -->
+  <article formArrayName="ingredients" class="flex flex-col w-full">
+    @for(ingr of getIngredients().controls;track ingr; let idx = $index){
+    <mat-form-field appearance="outline">
+      <mat-label>Ingredient {{ idx + 1 }}</mat-label>
+      <input [formControlName]="idx" matInput placeholder="name" value="" />
+    </mat-form-field>
+    }
+  </article>
+  <!-- category -->
+  <mat-form-field class="w-full" appearance="outline">
+    <mat-label>category</mat-label>
+    <mat-select formControlName="category">
+      @for (category of ["Breakfast" , "Lunch" , "Dinner" , "Snack" ,
+      "Dessert"];track category ) {
+      <mat-option [value]="category">{{ category }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <input (change)="onFileUpload($event)" type="file" />
+  <section class="example-section">
+    <mat-checkbox formControlName="favorite" class="example-margin"
+      >Check me!</mat-checkbox
+    >
+  </section>
+  <button mat-flat-button>submitForm</button>
+</form>

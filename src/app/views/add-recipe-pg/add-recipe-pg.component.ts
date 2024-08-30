@@ -11,30 +11,36 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { RecipesStore } from '../../store/recipes.store';
+import { takeUntil } from 'rxjs';
+import { Unsubscriber } from '../../services/unsubscriber/unsubscriber.service';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-add-recipe-pg',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatFormField,
     MatInputModule,
     TextFieldModule,
     MatSelectModule,
-    CommonModule,
     MatCheckboxModule,
+    MatButtonModule,
   ],
   templateUrl: './add-recipe-pg.component.html',
 })
-export class AddRecipePgComponent implements OnInit {
-  public fb = inject(FormBuilder);
-  recipeForm!: FormGroup;
+export class AddRecipePgComponent extends Unsubscriber implements OnInit {
+  store = inject(RecipesStore);
+  fb = inject(FormBuilder);
+  addRecipeForm!: FormGroup;
   ngOnInit(): void {
     this.initForm();
   }
 
   initForm() {
-    this.recipeForm = this.fb.group({
+    this.addRecipeForm = this.fb.group({
+      id: [],
       title: [],
       description: [],
       ingredients: this.fb.array(
@@ -47,7 +53,27 @@ export class AddRecipePgComponent implements OnInit {
     });
   }
   getIngredients() {
-    return this.recipeForm.get('ingredients') as FormArray;
+    return this.addRecipeForm.get('ingredients') as FormArray;
   }
-  onSubmit() {}
+  onFileUpload(event: Event) {
+    const fileInputElement = event.target as HTMLInputElement;
+    if (fileInputElement.files && fileInputElement.files[0]) {
+      console.log(fileInputElement.files[0]);
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        let baseStringResult = reader.result as string;
+        this.addRecipeForm.patchValue({ image: baseStringResult });
+      };
+      reader.readAsDataURL(fileInputElement.files[0]);
+    }
+  }
+  onSubmit() {
+    // console.log(this.addRecipeForm);
+    this.store
+      .addRecipe(this.addRecipeForm.value)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((recipe) =>
+        console.log('subscription in add recipe:', recipe)
+      );
+  }
 }

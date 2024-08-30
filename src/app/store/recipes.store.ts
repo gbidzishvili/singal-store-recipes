@@ -1,7 +1,13 @@
 import { Recipe } from '../core/models/recipe.model';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { RecipesService } from '../services/recipes/recipes.service';
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { catchError, of, switchMap, tap } from 'rxjs';
 
 export type RecipesFilter = 'all' | 'name' | 'favorites' | 'category';
@@ -29,11 +35,65 @@ export const RecipesStore = signalStore(
           patchState(store, { recipes, loading: false });
         }),
         catchError((error: any) => {
-          //   console.error('Error Fetching recipes:', error);
+          console.error('Failed to load recipes:', error);
           patchState(store, { loading: false });
           return of([]);
         })
       );
     },
+    addRecipe(partRecipe: Partial<Recipe>) {
+      return recipesService.addRecipe(partRecipe).pipe(
+        tap((recipe: Recipe) => {
+          patchState(store, (state) => ({
+            recipes: [...state.recipes, recipe],
+          }));
+        }),
+        catchError((error: Error) => {
+          console.error('Failed to add recipe:', error);
+          return of([]);
+        })
+      );
+    },
+    deleteRecipe(id: string) {
+      return recipesService.deleteRecipe(id).pipe(
+        tap(() => {
+          patchState(store, (state) => ({
+            recipes: state.recipes.filter((recipe) => recipe.id !== id),
+          }));
+        }),
+        catchError((error: Error) => {
+          console.error('Failed to delete recipe', error);
+          return of([]);
+        })
+      );
+    },
+    updateRecipe(id: string, newRecipe: Recipe) {
+      return recipesService.updateRecipe(id, newRecipe).pipe(
+        tap(() => {
+          patchState(store, (state) => ({
+            recipes: state.recipes.map((recipe: Recipe) =>
+              recipe.id === newRecipe.id ? newRecipe : recipe
+            ),
+          }));
+        }),
+        catchError((error: Error) => {
+          console.error('Failed to update recipe', error);
+          return of([]);
+        })
+      );
+    },
+    getRecipeById(id: string) {
+      let recipe = store.recipes().find((recipe) => recipe.id === id);
+      return recipe ? of(recipe) : of(null);
+    },
+    updateFilter(filter: RecipesFilter) {
+      patchState(store, { filter });
+    },
+  })),
+  withComputed((state) => ({
+    filterdRecipes: computed(() => {
+      const recipes = state.recipes();
+      return recipes;
+    }),
   }))
 );

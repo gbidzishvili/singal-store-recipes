@@ -34,9 +34,6 @@ export class HomePgComponent extends Unsubscriber {
   store = inject(RecipesStore);
   router = inject(Router);
   filter = viewChild<ElementRef>('filter');
-  constructor() {
-    super();
-  }
   ngOnInit() {
     this.loadRecipes().pipe(takeUntil(this.destroy$)).subscribe(console.log);
   }

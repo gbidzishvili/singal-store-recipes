@@ -13,7 +13,8 @@
 <div class="flex gap-6 p-6 flex-wrap justify-center m-auto">
   @for(recipe of store.filterdRecipes();track recipe.title){
   <app-recipe-card
-    (onEdit)="handleEditClick($event)"
+    (click)="goTo(recipe.id, 'details')"
+    (onEdit)="goTo($event, 'edit')"
     (onDelete)="handleDeleteClick($event)"
     [recipe]="recipe"
   ></app-recipe-card>

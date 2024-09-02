@@ -36,11 +36,6 @@ export class HomePgComponent extends Unsubscriber {
   filter = viewChild<ElementRef>('filter');
   constructor() {
     super();
-    effect(() => {
-      // const filter = this.filter();
-      // // filter?.value = this.store.filter();
-      // console.log(filter, this.store.filter());
-    });
   }
   ngOnInit() {
     this.loadRecipes().pipe(takeUntil(this.destroy$)).subscribe(console.log);
@@ -51,10 +46,6 @@ export class HomePgComponent extends Unsubscriber {
   loadRecipes() {
     return this.store.loadAll();
   }
-
-  handleEditClick(id: string) {
-    this.router.navigate(['/edit'], { queryParams: { id: id } });
-  }
   handleDeleteClick(id: string) {
     if (confirm('Do you want to delete this Recipe'))
       this.store
@@ -62,7 +53,13 @@ export class HomePgComponent extends Unsubscriber {
         .pipe(takeUntil(this.destroy$))
         .subscribe((v) => console.log('delete recipe in home-pg', v));
   }
-  goTo(endpoint: string) {
-    this.router.navigate([endpoint]);
+  // handleEditClick(id: string) {
+  //   this.router.navigate(['/edit'], { queryParams: { id: id } });
+  // }
+  // showDetails(id: string) {
+  //   this.router.navigate(['/details'], { queryParams: { id: id } });
+  // }
+  goTo(id: string, endpoint: string) {
+    this.router.navigate([endpoint], { queryParams: { id: id } });
   }
 }

@@ -1,9 +1,13 @@
 <mat-card class="flex items-center w-80" appearance="outlined">
   <div class="flex justify-end gap-3 w-full p-2">
-    <mat-icon class="cursor-pointer" (click)="onEditIconClick(recipe().id)"
+    <mat-icon
+      class="cursor-pointer z-10"
+      (click)="onClick($event, recipe().id, 'edit')"
       >edit</mat-icon
     >
-    <mat-icon class="cursor-pointer" (click)="onDeleteIconClick(recipe().id)"
+    <mat-icon
+      class="cursor-pointer z-10"
+      (click)="onClick($event, recipe().id, 'delete')"
       >delete</mat-icon
     >
   </div>

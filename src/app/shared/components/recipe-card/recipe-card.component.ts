@@ -5,6 +5,8 @@ import {
   EventEmitter,
   output,
   input,
+  Signal,
+  OutputEmitterRef,
 } from '@angular/core';
 import { Recipe } from '../../../core/models/recipe.model';
 import { MatCardModule } from '@angular/material/card';
@@ -19,10 +21,12 @@ export class RecipeCardComponent {
   recipe = input.required<Recipe>();
   onEdit = output<string>();
   onDelete = output<string>();
-  onEditIconClick(id: string) {
-    this.onEdit.emit(id);
-  }
-  onDeleteIconClick(id: string) {
-    this.onDelete.emit(id);
+  eventMap: { [key: string]: OutputEmitterRef<string> } = {
+    edit: this.onEdit,
+    delete: this.onDelete,
+  };
+  onClick(event: Event, id: string, action: string) {
+    event.stopPropagation();
+    this.eventMap[action].emit(id);
   }
 }

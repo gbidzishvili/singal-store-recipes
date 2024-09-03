@@ -10,6 +10,13 @@
       (click)="onClick($event, recipe().id, 'delete')"
       >delete</mat-icon
     >
+
+    <mat-icon
+      (click)="addToFavorites($event, recipe().id, !recipe().favorite)"
+      class="cursor-pointer"
+      [ngClass]="recipe().favorite ? 'text-red-600' : 'text-black'"
+      >favorite</mat-icon
+    >
   </div>
   <mat-card-header>
     <mat-card-content> {{ recipe().title }} </mat-card-content>

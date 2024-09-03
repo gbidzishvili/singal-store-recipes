@@ -1,7 +1,11 @@
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
-    extend: {},
+    extend: {
+      margin: {
+        "center-auto": "0 auto",
+      },
+    },
   },
   plugins: [],
 };

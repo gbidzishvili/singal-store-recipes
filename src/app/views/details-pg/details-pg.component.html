@@ -1,8 +1,30 @@
-<mat-list role="list">
-  <mat-list-item role="listitem">name: </mat-list-item>
-  <mat-list-item role="listitem">description:</mat-list-item>
-  <mat-list-item role="listitem">category:</mat-list-item>
-  <mat-list-item role="listitem">image:</mat-list-item>
-  <mat-list-item role="listitem">favorite:</mat-list-item>
-  <mat-list-item role="listitem">ingredients:</mat-list-item>
+@if(recipe$ | async; as recipe){
+<mat-list class="!m-center-auto w-[500px]" role="list">
+  <mat-list-item role="listitem">name: {{ recipe.title }} </mat-list-item>
+  <mat-list-item role="listitem"
+    >description: {{ recipe.description }}</mat-list-item
+  >
+  <mat-list-item role="listitem">category: {{ recipe.category }}</mat-list-item>
+  <mat-list-item role="listitem">image: {{ recipe.image }}</mat-list-item>
+  <mat-list-item class="w-50 !h-full" role="listitem">
+    image: <img class="w-50 h-50" [src]="recipe.image" alt="" />
+  </mat-list-item>
+
+  <mat-list-item role="listitem">favorite: {{ recipe.favorite }}</mat-list-item>
+  <mat-list-item role="listitem"
+    >ingredients:{{ recipe.ingredients }}</mat-list-item
+  >
+  <mat-list-item
+    (click)="addToFavorites(recipe.id, !recipe.favorite)"
+    role="button"
+    >Favorites
+    <mat-icon
+      class="cursor-pointer"
+      [ngClass]="recipe.favorite ? 'text-red-600' : 'text-black'"
+      >favorite</mat-icon
+    ></mat-list-item
+  >
 </mat-list>
+}@else{
+<div>recipe doesn't found</div>
+}

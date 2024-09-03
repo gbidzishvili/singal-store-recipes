@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppUrlEnum } from './core/const/route-enums';
+import { RecipeResolver } from './views/details-pg/resolver/recipe.resolver';
 
 export const routes: Routes = [
   {
@@ -29,5 +30,6 @@ export const routes: Routes = [
       import('./views/details-pg/details-pg.component').then(
         (m) => m.DetailsPgComponent
       ),
+    resolve: { recipe: RecipeResolver },
   },
 ];

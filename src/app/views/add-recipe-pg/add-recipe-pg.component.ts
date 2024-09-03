@@ -49,7 +49,7 @@ export class AddRecipePgComponent extends Unsubscriber implements OnInit {
       ),
       category: [],
       image: [],
-      favorite: [],
+      favorite: [false],
     });
   }
   getIngredients() {
@@ -68,7 +68,6 @@ export class AddRecipePgComponent extends Unsubscriber implements OnInit {
     }
   }
   onSubmit() {
-    // console.log(this.addRecipeForm);
     this.store
       .addRecipe(this.addRecipeForm.value)
       .pipe(takeUntil(this.destroy$))

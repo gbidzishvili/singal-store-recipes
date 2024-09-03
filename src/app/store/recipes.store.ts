@@ -10,18 +10,24 @@ import { RecipesService } from '../services/recipes/recipes.service';
 import { computed, inject } from '@angular/core';
 import { catchError, of, switchMap, tap } from 'rxjs';
 
-export type RecipesFilter = 'all' | 'name' | 'favorites' | 'category';
+export type RecipesFilter = {
+  name?: string;
+  favorites?: boolean;
+  category?: string;
+};
 
 type RecipesState = {
   recipes: Recipe[];
+  category: string;
   loading: boolean;
   filter: RecipesFilter;
 };
 
 const initialState: RecipesState = {
   recipes: [],
+  category: 'All',
   loading: false,
-  filter: 'all',
+  filter: { name: '', favorites: false, category: '' },
 };
 
 export const RecipesStore = signalStore(
@@ -67,12 +73,12 @@ export const RecipesStore = signalStore(
         })
       );
     },
-    updateRecipe(id: string, newRecipe: Recipe) {
+    updateRecipe(id: string, newRecipe: Partial<Recipe>) {
       return recipesService.updateRecipe(id, newRecipe).pipe(
         tap(() => {
           patchState(store, (state) => ({
             recipes: state.recipes.map((recipe: Recipe) =>
-              recipe.id === newRecipe.id ? newRecipe : recipe
+              recipe.id === newRecipe.id ? { ...recipe, ...newRecipe } : recipe
             ),
           }));
         }),
@@ -87,12 +93,32 @@ export const RecipesStore = signalStore(
       return recipe ? of(recipe) : of(null);
     },
     updateFilter(filter: RecipesFilter) {
-      patchState(store, { filter });
+      // patchState(store, {this.state.filter() filter });
+      patchState(store, (state) => ({
+        filter: { ...state.filter, ...filter },
+      }));
     },
   })),
   withComputed((state) => ({
     filterdRecipes: computed(() => {
-      const recipes = state.recipes();
+      console.log('with computed', state?.filter?.category?.());
+      let recipes = state.recipes();
+      if (state?.filter?.favorites?.() === true) {
+        recipes = recipes.filter((recipe) => recipe.favorite);
+      }
+      if (
+        state?.filter?.category?.() &&
+        state?.filter?.category?.() !== 'All'
+      ) {
+        recipes = recipes.filter(
+          (recipe) => recipe.category === state?.filter?.category?.()
+        );
+      }
+      if (state?.filter?.name?.()) {
+        recipes = recipes.filter((recipe) =>
+          recipe.title.includes(state?.filter?.name?.() as string)
+        );
+      }
       return recipes;
     }),
   }))

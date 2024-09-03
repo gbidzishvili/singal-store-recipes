@@ -23,7 +23,7 @@ export class RecipesService {
   deleteRecipe(id: string) {
     return this.http.delete(`http://localhost:3000/recipes/${id}`);
   }
-  updateRecipe(id: string, recipe: Recipe) {
-    return this.http.put(`http://localhost:3000/recipes/${id}`, recipe);
+  updateRecipe(id: string, recipe: Partial<Recipe>) {
+    return this.http.patch(`http://localhost:3000/recipes/${id}`, recipe);
   }
 }

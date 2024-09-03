@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { AppUrlEnum } from './core/const/route-enums';
 import { RecipeResolver } from './views/details-pg/resolver/recipe.resolver';
+import { accessGuard } from './core/guards/access.guard';
+import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,8 @@ export const routes: Routes = [
       import('./views/add-recipe-pg/add-recipe-pg.component').then(
         (m) => m.AddRecipePgComponent
       ),
+    canActivate: [accessGuard],
+    canDeactivate: [unsavedChangesGuard],
   },
   {
     path: `${AppUrlEnum.EDIT}`,
@@ -23,6 +27,7 @@ export const routes: Routes = [
       import('./views/edit-recipe-pg/edit-recipe-pg.component').then(
         (m) => m.EditRecipePgComponent
       ),
+    canActivate: [accessGuard],
   },
   {
     path: `${AppUrlEnum.DETAILS}`,
@@ -31,5 +36,14 @@ export const routes: Routes = [
         (m) => m.DetailsPgComponent
       ),
     resolve: { recipe: RecipeResolver },
+  },
+  {
+    path: `${AppUrlEnum.FAVORITES}`,
+    loadComponent: () =>
+      import('./views/favorites-pg/favorites-pg.component').then(
+        (m) => m.FavoritesPgComponent
+      ),
+    resolve: { recipe: RecipeResolver },
+    canActivate: [accessGuard],
   },
 ];

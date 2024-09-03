@@ -1,0 +1,23 @@
+<span class="text-3xl block w-72 font-bold mx-auto my-11"
+  >Your favorite recipes</span
+>
+@if(!store.loading()){
+<div class="flex gap-6 p-6 flex-wrap justify-center m-auto">
+  @for(recipe of store.favoriteRecipes();track recipe.title){
+  <app-recipe-card
+    (click)="goTo(recipe.id, 'details')"
+    (onEdit)="goTo($event, 'edit')"
+    (onDelete)="handleDeleteClick($event)"
+    (onFavorite)="handleFavoriteClick($event)"
+    [recipe]="recipe"
+  ></app-recipe-card>
+  }
+</div>
+<a
+  [routerLink]="['/add']"
+  class="w-36 block bg-blue-500 rounded text-white p-2 mx-auto text-center"
+  >Add new recipe</a
+>
+} @else{
+<mat-spinner class="m-auto" />
+}

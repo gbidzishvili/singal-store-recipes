@@ -18,14 +18,12 @@ export type RecipesFilter = {
 
 type RecipesState = {
   recipes: Recipe[];
-  category: string;
   loading: boolean;
   filter: RecipesFilter;
 };
 
 const initialState: RecipesState = {
   recipes: [],
-  category: 'All',
   loading: false,
   filter: { name: '', favorites: false, category: '' },
 };

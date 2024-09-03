@@ -3,4 +3,5 @@ export enum AppUrlEnum {
   DETAILS = 'details',
   EDIT = 'edit',
   HOME = 'home',
+  FAVORITES = 'favorites',
 }

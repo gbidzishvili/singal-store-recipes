@@ -28,7 +28,6 @@ export class TooltipDirective {
   private tooltipComponent?: ComponentRef<any>;
   @HostListener('mouseenter')
   onMouseEnter(): void {
-    console.log('onmouseEnter');
     if (this.tooltipComponent) {
       return;
     }
@@ -43,7 +42,6 @@ export class TooltipDirective {
   }
   @HostListener('mouseleave')
   onmouseleave(): void {
-    console.log('onmouseleave');
     if (!this.tooltipComponent) {
       return;
     }

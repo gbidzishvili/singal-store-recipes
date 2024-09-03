@@ -16,15 +16,7 @@ import { of, switchMap, takeUntil, tap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogModule,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
@@ -41,6 +33,7 @@ import { TooltipDirective } from '../../shared/directives/tooltip.directive';
     RouterModule,
     MatDialogModule,
     TooltipDirective,
+    RouterLink,
   ],
   templateUrl: './home-pg.component.html',
 })
@@ -50,13 +43,12 @@ export class HomePgComponent extends Unsubscriber {
   readonly dialog = inject(MatDialog);
 
   ngOnInit() {
-    this.loadRecipes().pipe(takeUntil(this.destroy$)).subscribe(console.log);
+    this.loadRecipes().pipe(takeUntil(this.destroy$)).subscribe();
   }
   loadRecipes() {
     return this.store.loadAll();
   }
   onChangeFavorites(value: string) {
-    // console.log(event.value, event, 'asdfasdlika');
     const filter = value === 'All' ? false : true;
     this.store.updateFilter({ favorites: filter });
   }
@@ -64,7 +56,6 @@ export class HomePgComponent extends Unsubscriber {
     this.store.updateFilter({ category: value });
   }
   onInputChange(value: string) {
-    console.log(value);
     this.store.updateFilter({ name: value });
   }
   handleDeleteClick(id: string) {
@@ -91,15 +82,13 @@ export class HomePgComponent extends Unsubscriber {
 
   handleFavoriteClick(event: any) {
     // best practice needed change store without reloading view
-    console.log(event);
     this.store
       .updateRecipe(event.id, { favorite: event.favorite })
       .pipe(
         takeUntil(this.destroy$),
         switchMap(() => this.store.loadAll())
       )
-      .subscribe(console.log);
-    console.log('recipes', this.store.recipes());
+      .subscribe();
   }
   goTo(id: string, endpoint: string) {
     this.router.navigate([endpoint], { queryParams: { id: id } });

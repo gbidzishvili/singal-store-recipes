@@ -99,7 +99,6 @@ export const RecipesStore = signalStore(
   })),
   withComputed((state) => ({
     filterdRecipes: computed(() => {
-      console.log('with computed', state?.filter?.category?.());
       let recipes = state.recipes();
       if (state?.filter?.favorites?.() === true) {
         recipes = recipes.filter((recipe) => recipe.favorite);
@@ -119,5 +118,10 @@ export const RecipesStore = signalStore(
       }
       return recipes;
     }),
-  }))
+    favoriteRecipes: computed(() => {
+
+        return state.recipes().filter(recipe=>recipe.favorite)
+    })
+  }
+))
 );

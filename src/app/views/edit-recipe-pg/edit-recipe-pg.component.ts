@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe } from '../../core/models/recipe.model';
-import { of, switchMap, takeUntil } from 'rxjs';
+import { catchError, of, switchMap, takeUntil, tap } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -86,6 +86,16 @@ export class EditRecipePgComponent extends Unsubscriber implements OnInit {
   onFileUpload(event: Event) {}
 
   onSubmit() {
-    console.log(this.editRecipeForm);
+    this.store
+      .addRecipe(this.editRecipeForm.value)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => alert('recipe has updated')),
+        catchError((error) => {
+          alert('error has happened');
+          return of([]);
+        })
+      )
+      .subscribe();
   }
 }

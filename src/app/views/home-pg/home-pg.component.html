@@ -1,14 +1,29 @@
 <h1 class="text-center">Recipes</h1>
-<a [routerLink]="['/add']">Add</a>
 
-<mat-form-field appearance="outline">
-  <mat-label>Favorite food</mat-label>
-  <mat-select #filter (selectionChange)="onChangeValue($event)">
-    @for (filter of ["Name","Favorites","Category"]; track filter) {
+<mat-form-field class="mx-4" appearance="outline">
+  <mat-label>Filter By Favourites</mat-label>
+  <mat-select #favorites (selectionChange)="onChangeFavorites(favorites.value)">
+    @for (filter of ["All","favorites"]; track filter) {
     <mat-option [value]="filter">{{ filter }}</mat-option>
     }
   </mat-select>
 </mat-form-field>
+
+<mat-form-field class="mx-4" appearance="outline">
+  <mat-label>Filter By Category</mat-label>
+  <mat-select #category (selectionChange)="onChangeCategory(category.value)">
+    @for (category of ["All","Breakfast", "Lunch", "Dinner", "Snack",
+    "Dessert"]; track category) {
+    <mat-option [value]="category">{{ category }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field class="mx-4" appearance="outline">
+  <mat-label>Filter By Category</mat-label>
+  <input #name (input)="onInputChange(name.value)" matInput value="" />
+</mat-form-field>
+
 @if(!store.loading()){
 <div class="flex gap-6 p-6 flex-wrap justify-center m-auto">
   @for(recipe of store.filterdRecipes();track recipe.title){
@@ -16,10 +31,16 @@
     (click)="goTo(recipe.id, 'details')"
     (onEdit)="goTo($event, 'edit')"
     (onDelete)="handleDeleteClick($event)"
+    (onFavorite)="handleFavoriteClick($event)"
     [recipe]="recipe"
   ></app-recipe-card>
   }
 </div>
+<a
+  [routerLink]="['/add']"
+  class="w-36 block bg-blue-500 rounded text-white p-2 mx-auto text-center"
+  >Add new recipe</a
+>
 } @else{
 <mat-spinner class="m-auto" />
 }

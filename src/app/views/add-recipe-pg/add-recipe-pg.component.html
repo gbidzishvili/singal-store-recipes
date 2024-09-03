@@ -1,4 +1,5 @@
 <h1 class="text-center">Add new Recipe</h1>
+<a [routerLink]="['/']">liakaa</a>
 <form
   [formGroup]="addRecipeForm"
   (submit)="onSubmit()"
@@ -30,6 +31,7 @@
         <input [formControlName]="idx" matInput placeholder="name" value="" />
       </mat-form-field>
       <button
+        type="button"
         (click)="removeIngredient(idx)"
         class="w-11 h-11 flex items-center justify-center bg-blue-500 rounded text-white p-0 text-center"
       >
@@ -38,6 +40,7 @@
     </div>
     }
     <button
+      type="button"
       (click)="addNewIngredient()"
       class="w-48 block bg-blue-500 rounded text-white p-2 mx-auto text-center"
     >

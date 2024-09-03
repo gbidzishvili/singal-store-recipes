@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -17,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe } from '../../core/models/recipe.model';
 import { of, switchMap, takeUntil } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-recipe-pg',
@@ -30,6 +32,7 @@ import { of, switchMap, takeUntil } from 'rxjs';
     MatSelectModule,
     MatCheckboxModule,
     MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './edit-recipe-pg.component.html',
 })
@@ -74,7 +77,12 @@ export class EditRecipePgComponent extends Unsubscriber implements OnInit {
   getIngredients() {
     return this.editRecipeForm.get('ingredients') as FormArray;
   }
-
+  addNewIngredient() {
+    this.getIngredients().push(new FormControl());
+  }
+  removeIngredient(idx: number) {
+    this.getIngredients().removeAt(idx);
+  }
   onFileUpload(event: Event) {}
 
   onSubmit() {

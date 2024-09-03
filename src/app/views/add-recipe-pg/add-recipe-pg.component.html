@@ -24,11 +24,25 @@
   <!-- ingredients -->
   <article formArrayName="ingredients" class="flex flex-col w-full">
     @for(ingr of getIngredients().controls;track ingr; let idx = $index){
-    <mat-form-field appearance="outline">
-      <mat-label>Ingredient {{ idx + 1 }}</mat-label>
-      <input [formControlName]="idx" matInput placeholder="name" value="" />
-    </mat-form-field>
+    <div class="flex items-cener justify-between">
+      <mat-form-field appearance="outline">
+        <mat-label>add ingredient</mat-label>
+        <input [formControlName]="idx" matInput placeholder="name" value="" />
+      </mat-form-field>
+      <button
+        (click)="removeIngredient(idx)"
+        class="w-11 h-11 flex items-center justify-center bg-blue-500 rounded text-white p-0 text-center"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
     }
+    <button
+      (click)="addNewIngredient()"
+      class="w-48 block bg-blue-500 rounded text-white p-2 mx-auto text-center"
+    >
+      Add new ingredient
+    </button>
   </article>
   <!-- category -->
   <mat-form-field class="w-full" appearance="outline">
@@ -46,5 +60,9 @@
       >Check me!</mat-checkbox
     >
   </section>
-  <button mat-flat-button>submitForm</button>
+  <button
+    class="w-full block bg-blue-800 rounded text-white p-2 mx-auto text-center"
+  >
+    Add new recipe
+  </button>
 </form>

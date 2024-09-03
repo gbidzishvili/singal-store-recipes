@@ -5,6 +5,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import {
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -15,6 +16,7 @@ import { RecipesStore } from '../../store/recipes.store';
 import { takeUntil } from 'rxjs';
 import { Unsubscriber } from '../../services/unsubscriber/unsubscriber.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-add-recipe-pg',
   standalone: true,
@@ -27,6 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatCheckboxModule,
     MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './add-recipe-pg.component.html',
 })
@@ -54,6 +57,12 @@ export class AddRecipePgComponent extends Unsubscriber implements OnInit {
   }
   getIngredients() {
     return this.addRecipeForm.get('ingredients') as FormArray;
+  }
+  addNewIngredient() {
+    this.getIngredients().push(new FormControl());
+  }
+  removeIngredient(idx: number) {
+    this.getIngredients().removeAt(idx);
   }
   onFileUpload(event: Event) {
     const fileInputElement = event.target as HTMLInputElement;

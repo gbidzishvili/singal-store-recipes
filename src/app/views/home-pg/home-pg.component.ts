@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -11,10 +12,21 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { RecipeCardComponent } from '../../shared/components/recipe-card/recipe-card.component';
 import { Unsubscriber } from '../../services/unsubscriber/unsubscriber.service';
-import { switchMap, takeUntil } from 'rxjs';
+import { of, switchMap, takeUntil, tap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogModule,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-home-pg',
@@ -27,13 +39,16 @@ import { CommonModule } from '@angular/common';
     MatInputModule,
     RecipeCardComponent,
     RouterModule,
+    MatDialogModule,
+    TooltipDirective,
   ],
   templateUrl: './home-pg.component.html',
 })
 export class HomePgComponent extends Unsubscriber {
   store = inject(RecipesStore);
   router = inject(Router);
-  filter = viewChild<ElementRef>('filter');
+  readonly dialog = inject(MatDialog);
+
   ngOnInit() {
     this.loadRecipes().pipe(takeUntil(this.destroy$)).subscribe(console.log);
   }
@@ -53,12 +68,27 @@ export class HomePgComponent extends Unsubscriber {
     this.store.updateFilter({ name: value });
   }
   handleDeleteClick(id: string) {
-    if (confirm('Do you want to delete this Recipe'))
-      this.store
-        .deleteRecipe(id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((v) => console.log('delete recipe in home-pg', v));
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Delete Recipe',
+        content: 'Would you like to delete this recipe',
+      },
+    });
+    dialogRef
+      .afterClosed()
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((result: any) => {
+          if (result) {
+            return this.store.deleteRecipe(id);
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
   }
+
   handleFavoriteClick(event: any) {
     // best practice needed change store without reloading view
     console.log(event);

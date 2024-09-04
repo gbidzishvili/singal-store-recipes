@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -37,6 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './edit-recipe-pg.component.html',
 })
 export class EditRecipePgComponent extends Unsubscriber implements OnInit {
+  id = '';
   store = inject(RecipesStore);
   fb = inject(FormBuilder);
   route = inject(ActivatedRoute);
@@ -64,9 +65,10 @@ export class EditRecipePgComponent extends Unsubscriber implements OnInit {
     this.route.queryParams
       .pipe(
         takeUntil(this.destroy$),
-        switchMap((params: any) =>
-          params.id ? this.store.getRecipeById(params.id) : of(null)
-        )
+        switchMap((params: any) => {
+          this.id = params.id;
+          return params.id ? this.store.getRecipeById(params.id) : of(null);
+        })
       )
       .subscribe((recipe) =>
         recipe
@@ -83,11 +85,22 @@ export class EditRecipePgComponent extends Unsubscriber implements OnInit {
   removeIngredient(idx: number) {
     this.getIngredients().removeAt(idx);
   }
-  onFileUpload(event: Event) {}
+  onFileUpload(event: Event) {
+    const fileInputElement = event.target as HTMLInputElement;
+    if (fileInputElement.files && fileInputElement.files[0]) {
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        let baseStringResult = reader.result as string;
+        this.editRecipeForm.patchValue({ image: baseStringResult });
+      };
+      reader.readAsDataURL(fileInputElement.files[0]);
+    }
+  }
 
   onSubmit() {
+    console.log('apache', this.id);
     this.store
-      .addRecipe(this.editRecipeForm.value)
+      .updateRecipe(this.id, this.editRecipeForm.value)
       .pipe(
         takeUntil(this.destroy$),
         tap(() => alert('recipe has updated')),
